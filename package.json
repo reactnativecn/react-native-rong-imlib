@@ -1,0 +1,31 @@
+{
+  "name": "react-native-rong-imlib",
+  "version": "0.0.1",
+  "description": "React Native下的融云SDK (IMLib) 封装",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reactnativecn/react-native-rong-imlib.git"
+  },
+  "keywords": [
+    "react",
+    "native",
+    "ios",
+    "android",
+    "rong",
+    "im",
+    "chat"
+  ],
+  "author": "reactnativecn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reactnativecn/react-native-rong-imlib/issues"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.18.0"
+  },
+  "homepage": "https://github.com/reactnativecn/react-native-rong-imlib#readme"
+}
