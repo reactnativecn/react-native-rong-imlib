@@ -1,5 +1,11 @@
 package io.rong.imlib.ipc;
 
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -10,6 +16,11 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import io.rong.imlib.RongIMClient;
@@ -103,7 +114,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
             promise.reject("NotLogined", "Must call connect first.");
             return;
         }
-        client.getConversationList(new RongIMClient.ResultCallback<List<Conversation>>(){
+        client.getConversationList(new RongIMClient.ResultCallback<List<Conversation>>() {
 
             @Override
             public void onSuccess(List<Conversation> conversations) {
@@ -181,6 +192,140 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
                 promise.resolve(Utils.convertMessage(message));
             }
 
-        } );
+        });
+    }
+
+    private MediaRecorder recorder;
+
+    private File recordTarget = new File(this.getReactApplicationContext().getFilesDir(), "imlibrecord.amr");
+
+    private long startTime;
+
+    @ReactMethod
+    public void startRecordVoice(Promise promise)
+    {
+        if (recorder != null) {
+            promise.reject("IsRecording", "Is still recording.");
+            return;
+        }
+        startTime = new Date().getTime();
+        recorder = new MediaRecorder();// new出MediaRecorder对象
+        // 设置MediaRecorder的音频源为麦克风
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        // 设置MediaRecorder录制的音频格式
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+        // 设置MediaRecorder录制音频的编码为amr.
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        recorder.setAudioChannels(1);
+        recorder.setAudioSamplingRate(8000);
+
+        recorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
+            @Override
+            public void onError(MediaRecorder mr, int what, int extra) {
+                Log.d("MediaRecord", "OnError: "+what+""+extra);
+            }
+        });
+
+        recorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+            @Override
+            public void onInfo(MediaRecorder mr, int what, int extra) {
+                Log.d("MediaRecord", "OnInfo: "+what+""+extra);
+            }
+        });
+
+        recorder.setOutputFile(recordTarget.toString());
+
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            recorder.release();
+            recorder = null;
+            promise.reject(e);
+            return;
+        }
+        recorder.start();
+        promise.resolve(null);
+    }
+
+    @ReactMethod
+    public void cancelRecordVoice(Promise promise)
+    {
+        if (recorder == null){
+            promise.reject("NotRecording", "Is not recording.");
+        }
+        recorder.stop();
+        recorder.release();
+        recorder = null;
+        promise.resolve(null);
+    }
+
+    @ReactMethod
+    public void finishRecordVoice(Promise promise)
+    {
+        if (recorder == null){
+            promise.reject("NotRecording", "Is not recording.");
+        }
+        recorder.stop();
+        recorder.release();
+        recorder = null;
+        FileInputStream inputFile = null;
+        try {
+            WritableMap ret = Arguments.createMap();
+
+            inputFile = new FileInputStream(recordTarget);
+            byte[] buffer = new byte[(int) recordTarget.length()];
+            inputFile.read(buffer);
+            inputFile.close();
+            ret.putString("type", "voice");
+            ret.putString("base64", Base64.encodeToString(buffer, Base64.DEFAULT));
+            ret.putString("uri", Uri.fromFile(recordTarget).toString());
+            ret.putInt("duration", (int)(new Date().getTime() - startTime));
+            promise.resolve(ret);
+        } catch (IOException e) {
+            promise.reject(e);
+            e.printStackTrace();
+        }
+    }
+
+    MediaPlayer player;
+    Promise playerPromise;
+
+    @ReactMethod
+    public void startPlayVoice(ReadableMap map, Promise promise) {
+        if (player != null){
+            this.stopPlayVoice();
+        }
+
+        String strUri = map.getString("uri");
+        player = MediaPlayer.create(this.getReactApplicationContext(), Uri.parse(strUri));
+        playerPromise = promise;
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                onPlayComplete(mp);
+            }
+        });
+        player.start();
+    }
+
+    private void onPlayComplete(MediaPlayer mp) {
+        if (player == mp) {
+            playerPromise.resolve(null);
+            playerPromise = null;
+            player.release();
+            player = null;
+        }
+    }
+
+    @ReactMethod
+    public void stopPlayVoice() {
+        if (player != null) {
+            playerPromise.resolve(true);
+            playerPromise = null;
+            player.stop();
+            player.release();
+            player = null;
+        }
     }
 }

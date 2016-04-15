@@ -1,5 +1,7 @@
 package io.rong.imlib.ipc;
 
+import android.net.Uri;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
@@ -9,10 +11,12 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
 import io.rong.message.TextMessage;
+import io.rong.message.VoiceMessage;
 
 /**
  * Created by tdzl2003 on 4/13/16.
@@ -40,6 +44,12 @@ public class Utils {
             ret.putString("type", "text");
             ret.putString("content", textContent.getContent());
             ret.putString("extra", textContent.getExtra());
+        } else if (content instanceof VoiceMessage) {
+            VoiceMessage voiceContent = (VoiceMessage)content;
+            ret.putString("type", "voice");
+            ret.putString("uri", voiceContent.getUri().toString());
+            ret.putInt("duration", voiceContent.getDuration());
+            ret.putString("extra", voiceContent.getExtra());
         } else {
             ret.putString("type", "unknown");
         }
@@ -48,16 +58,21 @@ public class Utils {
 
     public static WritableArray convertMessageList(List<Message> messages) {
         WritableArray ret = Arguments.createArray();
-        for (Message msg : messages) {
-            ret.pushMap(convertMessage(msg));
+
+        if (messages != null) {
+            for (Message msg : messages) {
+                ret.pushMap(convertMessage(msg));
+            }
         }
         return ret;
     }
 
     public static WritableArray convertConversationList(List<Conversation> conversations) {
         WritableArray ret = Arguments.createArray();
-        for (Conversation conv : conversations) {
-            ret.pushMap(convertConversation(conv));
+        if (conversations != null) {
+            for (Conversation conv : conversations) {
+                ret.pushMap(convertConversation(conv));
+            }
         }
         return ret;
     }
@@ -76,7 +91,14 @@ public class Utils {
         String type = map.getString("type");
         if (type.equals("text")) {
             TextMessage ret =  TextMessage.obtain(map.getString("content"));
-            if (map.hasKey("extra")){
+            if (map.hasKey("extra")) {
+                ret.setExtra(map.getString("extra"));
+            }
+            return ret;
+        } else if (type.equals("voice")) {
+            VoiceMessage ret = VoiceMessage.obtain(Uri.parse(map.getString("uri")), map.getInt("duration"));
+//            ret.setBase64(map.getString("base64"));
+            if (map.hasKey("extra")) {
                 ret.setExtra(map.getString("extra"));
             }
             return ret;
