@@ -85,7 +85,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
              */
             @Override
             public void onTokenIncorrect() {
-                promise.reject("TokenIncorrect", "Incorrect token provided.");
+                promise.reject("tokenIncorrect", "Incorrect token provided.");
             }
 
             /**
@@ -136,6 +136,16 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
         }
         client.logout();
         client = null;
+        promise.resolve(null);
+    }
+
+    @ReactMethod
+    public void disconnect(final Promise promise){
+        if (client == null) {
+            promise.reject("NotLogined", "Must call connect first.");
+            return;
+        }
+        client.disconnect();
         promise.resolve(null);
     }
 

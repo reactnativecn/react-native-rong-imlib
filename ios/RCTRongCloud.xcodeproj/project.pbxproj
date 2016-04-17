@@ -1,0 +1,308 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		09B385661CC20D5300BB85ED /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09B385651CC20D5300BB85ED /* AVFoundation.framework */; };
+		09B385681CC20D5900BB85ED /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09B385671CC20D5900BB85ED /* CoreAudio.framework */; };
+		91B363D21C57459700137B9C /* RCTRongCloud.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B363D11C57459700137B9C /* RCTRongCloud.h */; };
+		91B363D41C57459700137B9C /* RCTRongCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 91B363D31C57459700137B9C /* RCTRongCloud.m */; };
+		91B363F41C5747BD00137B9C /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B363F31C5747BD00137B9C /* RongIMLib.framework */; };
+		91EC70AD1C5753A4001FDC90 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91EC70AC1C5753A4001FDC90 /* libopencore-amrnb.a */; };
+		91EC70B01C575424001FDC90 /* RCTConvert+RongCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 91EC70AF1C575424001FDC90 /* RCTConvert+RongCloud.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		91B363CC1C57459700137B9C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				91B363D21C57459700137B9C /* RCTRongCloud.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		09B385651CC20D5300BB85ED /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		09B385671CC20D5900BB85ED /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		91B363CE1C57459700137B9C /* libRCTRongCloud.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTRongCloud.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		91B363D11C57459700137B9C /* RCTRongCloud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTRongCloud.h; sourceTree = "<group>"; };
+		91B363D31C57459700137B9C /* RCTRongCloud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTRongCloud.m; sourceTree = "<group>"; };
+		91B363F31C5747BD00137B9C /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMLib.framework; sourceTree = "<group>"; };
+		91EC70AC1C5753A4001FDC90 /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopencore-amrnb.a"; sourceTree = "<group>"; };
+		91EC70AE1C575424001FDC90 /* RCTConvert+RongCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTConvert+RongCloud.h"; sourceTree = "<group>"; };
+		91EC70AF1C575424001FDC90 /* RCTConvert+RongCloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTConvert+RongCloud.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		91B363CB1C57459700137B9C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09B385681CC20D5900BB85ED /* CoreAudio.framework in Frameworks */,
+				09B385661CC20D5300BB85ED /* AVFoundation.framework in Frameworks */,
+				91B363F41C5747BD00137B9C /* RongIMLib.framework in Frameworks */,
+				91EC70AD1C5753A4001FDC90 /* libopencore-amrnb.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		91B363C51C57459700137B9C = {
+			isa = PBXGroup;
+			children = (
+				09B385671CC20D5900BB85ED /* CoreAudio.framework */,
+				09B385651CC20D5300BB85ED /* AVFoundation.framework */,
+				91B363F21C5747BD00137B9C /* RongCloudSDK */,
+				91B363D01C57459700137B9C /* RCTRongCloud */,
+				91B363CF1C57459700137B9C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		91B363CF1C57459700137B9C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				91B363CE1C57459700137B9C /* libRCTRongCloud.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		91B363D01C57459700137B9C /* RCTRongCloud */ = {
+			isa = PBXGroup;
+			children = (
+				91B363D11C57459700137B9C /* RCTRongCloud.h */,
+				91B363D31C57459700137B9C /* RCTRongCloud.m */,
+				91EC70AE1C575424001FDC90 /* RCTConvert+RongCloud.h */,
+				91EC70AF1C575424001FDC90 /* RCTConvert+RongCloud.m */,
+			);
+			path = RCTRongCloud;
+			sourceTree = "<group>";
+		};
+		91B363F21C5747BD00137B9C /* RongCloudSDK */ = {
+			isa = PBXGroup;
+			children = (
+				91EC70AC1C5753A4001FDC90 /* libopencore-amrnb.a */,
+				91B363F31C5747BD00137B9C /* RongIMLib.framework */,
+			);
+			path = RongCloudSDK;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		91B363CD1C57459700137B9C /* RCTRongCloud */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91B363D71C57459700137B9C /* Build configuration list for PBXNativeTarget "RCTRongCloud" */;
+			buildPhases = (
+				91B363CA1C57459700137B9C /* Sources */,
+				91B363CB1C57459700137B9C /* Frameworks */,
+				91B363CC1C57459700137B9C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RCTRongCloud;
+			productName = RCTRongCloud;
+			productReference = 91B363CE1C57459700137B9C /* libRCTRongCloud.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		91B363C61C57459700137B9C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = erica;
+				TargetAttributes = {
+					91B363CD1C57459700137B9C = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 91B363C91C57459700137B9C /* Build configuration list for PBXProject "RCTRongCloud" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 91B363C51C57459700137B9C;
+			productRefGroup = 91B363CF1C57459700137B9C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				91B363CD1C57459700137B9C /* RCTRongCloud */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		91B363CA1C57459700137B9C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91EC70B01C575424001FDC90 /* RCTConvert+RongCloud.m in Sources */,
+				91B363D41C57459700137B9C /* RCTRongCloud.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		91B363D51C57459700137B9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		91B363D61C57459700137B9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		91B363D81C57459700137B9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RongCloudSDK",
+				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../react-native/React/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RongCloudSDK",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lstdc++",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		91B363D91C57459700137B9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RongCloudSDK",
+				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../react-native/React/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RongCloudSDK",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lstdc++",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		91B363C91C57459700137B9C /* Build configuration list for PBXProject "RCTRongCloud" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91B363D51C57459700137B9C /* Debug */,
+				91B363D61C57459700137B9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91B363D71C57459700137B9C /* Build configuration list for PBXNativeTarget "RCTRongCloud" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91B363D81C57459700137B9C /* Debug */,
+				91B363D91C57459700137B9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 91B363C61C57459700137B9C /* Project object */;
+}

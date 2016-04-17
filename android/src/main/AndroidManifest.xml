@@ -88,7 +88,9 @@
 
         <!-- end -->
 
-
+        <meta-data
+            android:name="RONG_CLOUD_APP_KEY"
+            android:value="${RONG_CLOUD_APP_KEY}" />
 
     </application>
 
