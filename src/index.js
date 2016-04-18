@@ -7,10 +7,6 @@ import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
 const RongIMLib = NativeModules.RongIMLib;
 
-for (var k in NativeModules){
-  console.log(k);
-}
-
 const eventEmitter = new EventEmitter();
 Object.assign(exports, RongIMLib);
 

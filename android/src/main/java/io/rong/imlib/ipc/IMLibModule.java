@@ -206,6 +206,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
     }
 
     private MediaRecorder recorder;
+    private Promise recordPromise;
 
     private File recordTarget = new File(this.getReactApplicationContext().getFilesDir(), "imlibrecord.amr");
 
@@ -215,7 +216,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
     public void startRecordVoice(Promise promise)
     {
         if (recorder != null) {
-            promise.reject("IsRecording", "Is still recording.");
+            cancelRecordVoice();
             return;
         }
         startTime = new Date().getTime();
@@ -233,14 +234,14 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
         recorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
             @Override
             public void onError(MediaRecorder mr, int what, int extra) {
-                Log.d("MediaRecord", "OnError: "+what+""+extra);
+                Log.d("MediaRecord", "OnError: " + what + "" + extra);
             }
         });
 
         recorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
             @Override
             public void onInfo(MediaRecorder mr, int what, int extra) {
-                Log.d("MediaRecord", "OnInfo: "+what+""+extra);
+                Log.d("MediaRecord", "OnInfo: " + what + "" + extra);
             }
         });
 
@@ -255,26 +256,27 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
             return;
         }
         recorder.start();
-        promise.resolve(null);
+        recordPromise = promise;
     }
 
     @ReactMethod
-    public void cancelRecordVoice(Promise promise)
+    public void cancelRecordVoice()
     {
         if (recorder == null){
-            promise.reject("NotRecording", "Is not recording.");
+            return;
         }
         recorder.stop();
         recorder.release();
         recorder = null;
-        promise.resolve(null);
+        recordPromise.reject("Canceled", "Record was canceled by user.");
+        recordPromise = null;
     }
 
     @ReactMethod
-    public void finishRecordVoice(Promise promise)
+    public void finishRecordVoice()
     {
         if (recorder == null){
-            promise.reject("NotRecording", "Is not recording.");
+            return;
         }
         recorder.stop();
         recorder.release();
@@ -291,15 +293,16 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
             ret.putString("base64", Base64.encodeToString(buffer, Base64.DEFAULT));
             ret.putString("uri", Uri.fromFile(recordTarget).toString());
             ret.putInt("duration", (int)(new Date().getTime() - startTime));
-            promise.resolve(ret);
+            recordPromise.resolve(ret);
         } catch (IOException e) {
-            promise.reject(e);
+            recordPromise.reject(e);
             e.printStackTrace();
         }
+        recordPromise = null;
     }
 
-    MediaPlayer player;
-    Promise playerPromise;
+    private MediaPlayer player;
+    private Promise playerPromise;
 
     @ReactMethod
     public void startPlayVoice(ReadableMap map, Promise promise) {
