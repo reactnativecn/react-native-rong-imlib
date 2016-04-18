@@ -334,7 +334,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
     @ReactMethod
     public void stopPlayVoice() {
         if (player != null) {
-            playerPromise.resolve(true);
+            playerPromise.reject("Canceled", "Record was canceled by user.");
             playerPromise = null;
             player.stop();
             player.release();
