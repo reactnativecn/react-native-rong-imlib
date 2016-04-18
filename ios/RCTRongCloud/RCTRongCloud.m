@@ -11,12 +11,14 @@
 #import "RCTConvert+RongCloud.h"
 #import "RCTUtils.h"
 #import "RCTEventDispatcher.h"
+#import "RCTRongCloudVoiceManager.h"
 
 #define OPERATION_FAILED (@"operation returns false.")
 
 @interface RCTRongCloud()<RCIMClientReceiveMessageDelegate>
 
 @property (nonatomic, strong) NSMutableDictionary *userInfoDic;
+@property (nonatomic, strong) RCTRongCloudVoiceManager *voiceManager;
 
 @end
 
@@ -41,6 +43,7 @@ RCT_EXPORT_MODULE(RCTRongIMLib);
     self = [super init];
     if (self) {
         [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:self object:nil];
+        _voiceManager = [RCTRongCloudVoiceManager new];
     }
     return self;
 }
@@ -151,6 +154,57 @@ RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) ta
     resolve([self.class _convertMessage:msg]);
 }
 
+RCT_EXPORT_METHOD(canRecordVoice:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    [_voiceManager canRecordVoice:^(NSError *error, NSDictionary *result) {
+        if (error) {
+            reject([NSString stringWithFormat:@"%ld", error.code], error.description, error);
+        }
+        else {
+            resolve(result);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(startRecordVoice:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    [_voiceManager startRecord:^(NSError *error,NSDictionary *result) {
+        if (error) {
+            reject([NSString stringWithFormat:@"%ld", error.code], error.description, error);
+        }
+        else {
+            resolve(result);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(cancelRecordVoice)
+{
+    [_voiceManager cancelRecord];
+}
+
+RCT_EXPORT_METHOD(finishRecordVoice)
+{
+    [_voiceManager finishRecord];
+}
+
+RCT_EXPORT_METHOD(startPlayVoice:(RCMessageContent *)voice rosolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    [_voiceManager startPlayVoice:(RCVoiceMessage *)voice result:^(NSError *error, NSDictionary *result) {
+        if (error) {
+            reject([NSString stringWithFormat:@"%ld", error.code], error.description, error);
+        }
+        else {
+            resolve(result);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(stopPlayVoice)
+{
+    [_voiceManager stopPlayVoice];
+}
+
 #pragma mark - delegate
 - (void)onReceived:(RCMessage *)message
               left:(int)nLeft
@@ -218,7 +272,7 @@ RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) ta
         dic[@"duration"] = @(message.duration);
         dic[@"extra"] = message.extra;
         if (message.wavAudioData) {
-            dic[@"wavAudioData"] = [message.wavAudioData base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+            dic[@"base64"] = [message.wavAudioData base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
         }
     }
     else {

@@ -13,12 +13,22 @@
 + (RCMessageContent *)RCMessageContent:(id)json;
 {
     json = [self NSDictionary:json];
+    NSString *type = [RCTConvert NSString:json[@"type"]];
     
-    if ([@"text" isEqualToString:json[@"type"]]) {
+    if ([@"text" isEqualToString:type]) {
         RCTextMessage* ret = [RCTextMessage messageWithContent:json[@"content"]];
-        ret.extra = [json objectForKey:@"extra"];
+        ret.extra = [RCTConvert NSString:json[@"extra"]];
         return ret;
-    } else {
+    } else if ([@"voice" isEqualToString:type]) {
+        NSString *base64 = [RCTConvert NSString:json[@"base64"]];
+        NSData *voice = [[NSData alloc] initWithBase64EncodedString:base64 options:0];
+        long long duration = [RCTConvert int64_t:json[@"duration"]];
+        
+        RCVoiceMessage *ret = [RCVoiceMessage messageWithAudio:voice duration:duration];
+        ret.extra = [RCTConvert NSString:json[@"extra"]];
+        return ret;
+    }
+    else {
         RCTextMessage* ret = [RCTextMessage messageWithContent:@"[未知消息]"];
         return ret;
     }
