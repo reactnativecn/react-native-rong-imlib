@@ -27,6 +27,17 @@
         RCVoiceMessage *ret = [RCVoiceMessage messageWithAudio:voice duration:duration];
         ret.extra = [RCTConvert NSString:json[@"extra"]];
         return ret;
+    } else if ([@"image" isEqualToString:type]) {
+        NSString * uri = [RCTConvert NSString:json[@"imageUrl"]];
+        RCImageMessage *ret = [RCImageMessage messageWithImageURI:uri];
+        ret.full = [json[@"full"] boolValue];
+        ret.extra = [RCTConvert NSString:json[@"extra"]];
+        return ret;
+    } else if ([@"notify" isEqualToString:type]) {
+        NSString * name = [RCTConvert NSString:json[@"name"]];
+        NSString * data =[RCTConvert NSString:json[@"data"]];
+        RCCommandNotificationMessage* ret = [RCCommandNotificationMessage notificationWithName:name data:data];
+        return ret;
     }
     else {
         RCTextMessage* ret = [RCTextMessage messageWithContent:@"[未知消息]"];

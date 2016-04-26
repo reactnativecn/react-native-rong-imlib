@@ -15,6 +15,8 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
+import io.rong.message.CommandNotificationMessage;
+import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 import io.rong.message.VoiceMessage;
 
@@ -50,6 +52,17 @@ public class Utils {
             ret.putString("uri", voiceContent.getUri().toString());
             ret.putInt("duration", voiceContent.getDuration());
             ret.putString("extra", voiceContent.getExtra());
+        } else if (content instanceof ImageMessage){
+            ImageMessage imageContent = (ImageMessage)content;
+            ret.putString("type", "image");
+            ret.putString("imageUrl", imageContent.getLocalUri().toString());
+            ret.putString("thumb", imageContent.getThumUri().toString());
+            ret.putString("extra", imageContent.getExtra());
+        } else if (content instanceof CommandNotificationMessage) {
+            CommandNotificationMessage notifyContent = (CommandNotificationMessage)content;
+            ret.putString("type", "notify");
+            ret.putString("name", notifyContent.getName());
+            ret.putString("data", notifyContent.getData());
         } else {
             ret.putString("type", "unknown");
         }
@@ -101,6 +114,15 @@ public class Utils {
             if (map.hasKey("extra")) {
                 ret.setExtra(map.getString("extra"));
             }
+            return ret;
+        } else if (type.equals("image")) {
+            String uri = map.getString("imageUrl");
+            ImageMessage ret = ImageMessage.obtain(Uri.parse(uri), Uri.parse(uri), map.hasKey("full") && map.getBoolean("full"));
+            if (map.hasKey("extra")) {
+                ret.setExtra(map.getString("extra"));
+            }
+        } else if (type.equals("notify")) {
+            CommandNotificationMessage ret = CommandNotificationMessage.obtain(map.getString("name"), map.getString("data"));
             return ret;
         }
         return TextMessage.obtain("[未知消息]");

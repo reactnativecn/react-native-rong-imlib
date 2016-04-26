@@ -275,6 +275,19 @@ RCT_EXPORT_METHOD(stopPlayVoice)
             dic[@"base64"] = [message.wavAudioData base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
         }
     }
+    else if ([messageContent isKindOfClass:[RCImageMessage class]]) {
+        RCImageMessage *message = (RCImageMessage*)messageContent;
+        dic[@"type"] = @"image";
+        dic[@"imageUrl"] = message.imageUrl;
+        dic[@"thumb"] = [NSString stringWithFormat:@"data:image/png;base64,%@", [UIImagePNGRepresentation(message.thumbnailImage) base64EncodedStringWithOptions:0]];
+        dic[@"extra"] = message.extra;
+    }
+    else if ([messageContent isKindOfClass:[RCCommandNotificationMessage class]]){
+        RCCommandNotificationMessage * message = (RCCommandNotificationMessage*)messageContent;
+        dic[@"type"] = @"notify";
+        dic[@"name"] = message.name;
+        dic[@"data"] = message.data;
+    }
     else {
         dic[@"type"] = @"unknown";
     }
