@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		09B385661CC20D5300BB85ED /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09B385651CC20D5300BB85ED /* AVFoundation.framework */; };
 		09B385681CC20D5900BB85ED /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09B385671CC20D5900BB85ED /* CoreAudio.framework */; };
+		09B80B331CC8ED5500E37B9A /* RCTRongCloudVoiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B80B321CC8ED5500E37B9A /* RCTRongCloudVoiceManager.m */; };
 		91B363D21C57459700137B9C /* RCTRongCloud.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91B363D11C57459700137B9C /* RCTRongCloud.h */; };
 		91B363D41C57459700137B9C /* RCTRongCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 91B363D31C57459700137B9C /* RCTRongCloud.m */; };
 		91B363F41C5747BD00137B9C /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B363F31C5747BD00137B9C /* RongIMLib.framework */; };
@@ -32,6 +33,8 @@
 /* Begin PBXFileReference section */
 		09B385651CC20D5300BB85ED /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		09B385671CC20D5900BB85ED /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		09B80B311CC8ED5500E37B9A /* RCTRongCloudVoiceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTRongCloudVoiceManager.h; sourceTree = "<group>"; };
+		09B80B321CC8ED5500E37B9A /* RCTRongCloudVoiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTRongCloudVoiceManager.m; sourceTree = "<group>"; };
 		91B363CE1C57459700137B9C /* libRCTRongCloud.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTRongCloud.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B363D11C57459700137B9C /* RCTRongCloud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTRongCloud.h; sourceTree = "<group>"; };
 		91B363D31C57459700137B9C /* RCTRongCloud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTRongCloud.m; sourceTree = "<group>"; };
@@ -78,6 +81,8 @@
 		91B363D01C57459700137B9C /* RCTRongCloud */ = {
 			isa = PBXGroup;
 			children = (
+				09B80B311CC8ED5500E37B9A /* RCTRongCloudVoiceManager.h */,
+				09B80B321CC8ED5500E37B9A /* RCTRongCloudVoiceManager.m */,
 				91B363D11C57459700137B9C /* RCTRongCloud.h */,
 				91B363D31C57459700137B9C /* RCTRongCloud.m */,
 				91EC70AE1C575424001FDC90 /* RCTConvert+RongCloud.h */,
@@ -153,6 +158,7 @@
 			files = (
 				91EC70B01C575424001FDC90 /* RCTConvert+RongCloud.m in Sources */,
 				91B363D41C57459700137B9C /* RCTRongCloud.m in Sources */,
+				09B80B331CC8ED5500E37B9A /* RCTRongCloudVoiceManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
