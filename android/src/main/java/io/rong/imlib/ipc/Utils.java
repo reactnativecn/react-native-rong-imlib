@@ -121,6 +121,7 @@ public class Utils {
             if (map.hasKey("extra")) {
                 ret.setExtra(map.getString("extra"));
             }
+            return ret;
         } else if (type.equals("notify")) {
             CommandNotificationMessage ret = CommandNotificationMessage.obtain(map.getString("name"), map.getString("data"));
             return ret;
