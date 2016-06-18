@@ -12,6 +12,7 @@
 #import "RCTUtils.h"
 #import "RCTEventDispatcher.h"
 #import "RCTRongCloudVoiceManager.h"
+#import "RCTImageLoader.h"
 
 #define OPERATION_FAILED (@"operation returns false.")
 
@@ -137,10 +138,39 @@ RCT_EXPORT_METHOD(getLatestMessages: (RCConversationType) type targetId:(NSStrin
     resolve(newArray);
 }
 
-RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) targetId content:(RCMessageContent*) content
+RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) targetId content:(NSDictionary*) json
                   pushContent: (NSString*) pushContent pushData:(NSString*) pushData
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 {
+    if ([[json valueForKey:@"type"] isEqualToString:@"image"]) {
+        NSString * uri = [RCTConvert NSString:json[@"imageUrl"]];
+        [self.bridge.imageLoader loadImageWithTag:uri callback:^(NSError *error, UIImage *image) {
+            dispatch_async([self methodQueue], ^(void) {
+                if (error) {
+                    reject([NSString stringWithFormat: @"%lu", (long)error.code], error.localizedDescription, error);
+                    return;
+                }
+                RCImageMessage *content = [RCImageMessage messageWithImage:image];
+                content.imageUrl = uri;
+                content.full = [json[@"full"] boolValue];
+                content.extra = [RCTConvert NSString:json[@"extra"]];
+                RCIMClient* client = [RCIMClient sharedRCIMClient];
+                RCMessage* msg = [client sendMessage:type targetId:targetId content:content pushContent:pushContent
+                                             success:^(long messageId){
+                                                 [_bridge.eventDispatcher sendAppEventWithName:@"msgSendOk" body:@(messageId)];
+                                             } error:^(RCErrorCode code, long messageId){
+                                                 NSMutableDictionary* dic = [NSMutableDictionary new];
+                                                 dic[@"messageId"] = @(messageId);
+                                                 dic[@"errCode"] = @((int)code);
+                                                 [_bridge.eventDispatcher sendAppEventWithName:@"msgSendFailed" body:dic];
+                                             }];
+                resolve([self.class _convertMessage:msg]);
+            });
+        }];
+
+        return;
+    }
+    RCMessageContent* content = [RCTConvert RCMessageContent:json];
     RCIMClient* client = [RCIMClient sharedRCIMClient];
     RCMessage* msg = [client sendMessage:type targetId:targetId content:content pushContent:pushContent
                 success:^(long messageId){
@@ -152,6 +182,22 @@ RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) ta
                     [_bridge.eventDispatcher sendAppEventWithName:@"msgSendFailed" body:dic];
                 }];
     resolve([self.class _convertMessage:msg]);
+}
+
+RCT_EXPORT_METHOD(insertMessage: (RCConversationType) type targetId:(NSString*) targetId senderId:(NSString*) senderId content:(NSDictionary*) json
+                  resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    RCMessageContent* content = [RCTConvert RCMessageContent:json];
+    RCIMClient* client = [RCIMClient sharedRCIMClient];
+    RCMessage* msg = [client insertMessage:type targetId:targetId senderUserId:senderId sendStatus:SentStatus_SENT content:content];
+    resolve([self.class _convertMessage:msg]);
+}
+
+RCT_EXPORT_METHOD(clearMessageUnreadStatus: (RCConversationType) type targetId:(NSString*) targetId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    RCIMClient* client = [RCIMClient sharedRCIMClient];
+    [client clearMessagesUnreadStatus:type targetId:targetId];
+    resolve(nil);
 }
 
 RCT_EXPORT_METHOD(canRecordVoice:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)

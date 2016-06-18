@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
@@ -137,6 +138,8 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
         client.logout();
         client = null;
         promise.resolve(null);
+
+
     }
 
     @ReactMethod
@@ -202,6 +205,45 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
                 promise.resolve(Utils.convertMessage(message));
             }
 
+        });
+    }
+
+    @ReactMethod
+    public void insertMessage(String type, String targetId, String senderId, ReadableMap map, final Promise promise) {
+        if (client == null) {
+            promise.reject("NotLogined", "Must call connect first.");
+            return;
+        }
+        client.insertMessage(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId, senderId, Utils.convertToMessageContent(map),
+            new RongIMClient.ResultCallback<Message>() {
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+                    promise.reject("" + errorCode.getValue(), errorCode.getMessage());
+                }
+
+                @Override
+                public void onSuccess(Message message) {
+                    promise.resolve(Utils.convertMessage(message));
+                }
+            });
+    }
+
+    @ReactMethod
+    public void clearMessageUnreadStatus(String type, String targetId, final Promise promise){
+        if (client == null) {
+            promise.reject("NotLogined", "Must call connect first.");
+            return;
+        }
+        client.clearMessagesUnreadStatus(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId, new RongIMClient.ResultCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                promise.resolve(null);
+            }
+
+            @Override
+            public void onError(RongIMClient.ErrorCode errorCode) {
+                promise.reject("" + errorCode.getValue(), errorCode.getMessage());
+            }
         });
     }
 

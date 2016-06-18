@@ -252,7 +252,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/RongCloudSDK",
 				);
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../react-native/React/**";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../react-native/Libraries/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/RongCloudSDK",
@@ -273,7 +276,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/RongCloudSDK",
 				);
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../react-native/React/**";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../../react-native/Libraries/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/RongCloudSDK",
