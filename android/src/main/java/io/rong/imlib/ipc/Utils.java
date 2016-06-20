@@ -1,7 +1,22 @@
 package io.rong.imlib.ipc;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 
+import com.facebook.common.executors.UiThreadImmediateExecutorService;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
@@ -9,6 +24,10 @@ import com.facebook.react.bridge.WritableMap;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import io.rong.imlib.RongIMClient;
@@ -55,7 +74,9 @@ public class Utils {
         } else if (content instanceof ImageMessage){
             ImageMessage imageContent = (ImageMessage)content;
             ret.putString("type", "image");
-            ret.putString("imageUrl", imageContent.getLocalUri().toString());
+            if (imageContent.getLocalUri() != null) {
+                ret.putString("imageUrl", imageContent.getLocalUri().toString());
+            }
             ret.putString("thumb", imageContent.getThumUri().toString());
             ret.putString("extra", imageContent.getExtra());
         } else if (content instanceof CommandNotificationMessage) {
@@ -127,5 +148,60 @@ public class Utils {
             return ret;
         }
         return TextMessage.obtain("[未知消息]");
+    }
+
+    public interface ImageCallback {
+        void invoke(@Nullable Bitmap bitmap);
+    }
+
+    public static void getImage(Uri uri, ResizeOptions resizeOptions, final ImageCallback imageCallback) {
+        BaseBitmapDataSubscriber dataSubscriber = new BaseBitmapDataSubscriber() {
+            @Override
+            protected void onNewResultImpl(Bitmap bitmap) {
+                bitmap = bitmap.copy(bitmap.getConfig(), true);
+                imageCallback.invoke(bitmap);
+            }
+
+            @Override
+            protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
+                imageCallback.invoke(null);
+            }
+        };
+
+        ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(uri);
+        if (resizeOptions != null) {
+            builder = builder.setResizeOptions(resizeOptions);
+        }
+        ImageRequest imageRequest = builder.build();
+
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, null);
+        dataSource.subscribe(dataSubscriber, UiThreadImmediateExecutorService.getInstance());
+    }
+
+    public static MessageContent convertImageMessageContent(Context context, Bitmap bmpSource) throws IOException {
+        File imageFileSource = new File(context.getCacheDir(), "source.jpg");
+        File imageFileThumb = new File(context.getCacheDir(), "thumb.jpg");
+
+        FileOutputStream fosSource = new FileOutputStream(imageFileSource);
+
+        // 保存原图。
+        bmpSource.compress(Bitmap.CompressFormat.JPEG, 100, fosSource);
+
+        // 创建缩略图变换矩阵。
+        Matrix m = new Matrix();
+        m.setRectToRect(new RectF(0, 0, bmpSource.getWidth(), bmpSource.getHeight()), new RectF(0, 0, 160, 160), Matrix.ScaleToFit.CENTER);
+
+        // 生成缩略图。
+        Bitmap bmpThumb = Bitmap.createBitmap(bmpSource, 0, 0, bmpSource.getWidth(), bmpSource.getHeight(), m, true);
+
+        imageFileThumb.createNewFile();
+
+        FileOutputStream fosThumb = new FileOutputStream(imageFileThumb);
+        bmpThumb.compress(Bitmap.CompressFormat.JPEG, 60, fosThumb);
+
+        ImageMessage imgMsg = ImageMessage.obtain(Uri.fromFile(imageFileThumb), Uri.fromFile(imageFileSource));
+
+        return imgMsg;
     }
 }

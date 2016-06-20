@@ -53,7 +53,6 @@ RCT_EXPORT_MODULE(RCTRongIMLib);
 {
     RCIMClient* client = [RCIMClient sharedRCIMClient];
     [client disconnect];
-    [client setReceiveMessageDelegate:nil object:nil];
 }
 
 + (void)registerAPI:(NSString *)aString
@@ -73,7 +72,7 @@ RCT_EXPORT_MODULE(RCTRongIMLib);
       withString:@""]
      stringByReplacingOccurrencesOfString:@" "
      withString:@""];
-    
+
     [[RCIMClient sharedRCIMClient] setDeviceToken:token];
 }
 
@@ -129,7 +128,7 @@ RCT_EXPORT_METHOD(getLatestMessages: (RCConversationType) type targetId:(NSStrin
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 {
     NSArray* array = [[RCIMClient sharedRCIMClient] getLatestMessages:type targetId:targetId count:count];
-    
+
     NSMutableArray* newArray = [NSMutableArray new];
     for (RCMessage* msg in array) {
         NSDictionary* convDic = [self.class _convertMessage:msg];
@@ -151,11 +150,13 @@ RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) ta
                     return;
                 }
                 RCImageMessage *content = [RCImageMessage messageWithImage:image];
-                content.imageUrl = uri;
                 content.full = [json[@"full"] boolValue];
                 content.extra = [RCTConvert NSString:json[@"extra"]];
                 RCIMClient* client = [RCIMClient sharedRCIMClient];
-                RCMessage* msg = [client sendMessage:type targetId:targetId content:content pushContent:pushContent
+                RCMessage* msg = [client sendImageMessage:type targetId:targetId content:content pushContent:pushContent
+                                                 progress:^(int progress, long messageId) {
+
+                                                 }
                                              success:^(long messageId){
                                                  [_bridge.eventDispatcher sendAppEventWithName:@"msgSendOk" body:@(messageId)];
                                              } error:^(RCErrorCode code, long messageId){
@@ -269,7 +270,7 @@ RCT_EXPORT_METHOD(stopPlayVoice)
     dic[@"targetId"] = conversation.targetId;
     dic[@"unreadCount"] = @(conversation.unreadMessageCount);
     dic[@"lastMessage"] = [self _converMessageContent:conversation.lastestMessage];
-    
+
     dic[@"isTop"] = @(conversation.isTop);
     dic[@"receivedStatus"] = @(conversation.receivedStatus);
     dic[@"sentStatus"] = @(conversation.sentStatus);
@@ -324,7 +325,11 @@ RCT_EXPORT_METHOD(stopPlayVoice)
     else if ([messageContent isKindOfClass:[RCImageMessage class]]) {
         RCImageMessage *message = (RCImageMessage*)messageContent;
         dic[@"type"] = @"image";
-        dic[@"imageUrl"] = message.imageUrl;
+        if ([[message.imageUrl substringToIndex:1] isEqualToString:@"/"]) {
+            dic[@"imageUrl"] = [NSString stringWithFormat: @"file://%s", message.imageUrl];
+        } else {
+            dic[@"imageUrl"] = message.imageUrl;
+        }
         dic[@"thumb"] = [NSString stringWithFormat:@"data:image/png;base64,%@", [UIImagePNGRepresentation(message.thumbnailImage) base64EncodedStringWithOptions:0]];
         dic[@"extra"] = message.extra;
     }
