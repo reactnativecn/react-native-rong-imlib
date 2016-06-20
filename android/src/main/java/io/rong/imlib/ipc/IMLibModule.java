@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,7 +62,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
 
     private void sendDeviceEvent(String type, Object arg){
         ReactContext context = this.getReactApplicationContext();
-        context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        context.getJSModule(RCTNativeAppEventEmitter.class)
                 .emit(type, arg);
 
     }
