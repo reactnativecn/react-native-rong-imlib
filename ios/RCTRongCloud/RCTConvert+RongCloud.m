@@ -52,11 +52,11 @@ RCT_ENUM_CONVERTER(RCConversationType, (@{
                                           @"discussion": @(ConversationType_DISCUSSION),
                                           @"group": @(ConversationType_GROUP),
                                           @"chatroom": @(ConversationType_CHATROOM),
-                                          @"customerService": @(ConversationType_CUSTOMERSERVICE),
+                                          @"customer_service": @(ConversationType_CUSTOMERSERVICE),
                                           @"system": @(ConversationType_SYSTEM),
-                                          @"appService": @(ConversationType_APPSERVICE),
-                                          @"publishService": @(ConversationType_PUBLICSERVICE),
-                                          @"pushService": @(ConversationType_PUSHSERVICE)
+                                          @"app_service": @(ConversationType_APPSERVICE),
+                                          @"publish_service": @(ConversationType_PUBLICSERVICE),
+                                          @"push_service": @(ConversationType_PUSHSERVICE)
                                  }), ConversationType_PRIVATE, unsignedIntegerValue)
 
 @end

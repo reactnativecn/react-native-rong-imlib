@@ -291,11 +291,11 @@ RCT_EXPORT_METHOD(stopPlayVoice)
         case ConversationType_DISCUSSION: return @"discussion";
         case ConversationType_GROUP: return @"group";
         case ConversationType_CHATROOM: return @"chatroom";
-        case ConversationType_CUSTOMERSERVICE: return @"customerService";
+        case ConversationType_CUSTOMERSERVICE: return @"customer_service";
         case ConversationType_SYSTEM: return @"system";
-        case ConversationType_APPSERVICE: return @"appService";
-        case ConversationType_PUBLICSERVICE: return @"publicService";
-        case ConversationType_PUSHSERVICE: return @"pushService";
+        case ConversationType_APPSERVICE: return @"app_service";
+        case ConversationType_PUBLICSERVICE: return @"public_service";
+        case ConversationType_PUSHSERVICE: return @"push_service";
         default: return @"unknown";
     }
 }
