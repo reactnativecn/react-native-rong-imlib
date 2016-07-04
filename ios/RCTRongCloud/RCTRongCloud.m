@@ -266,7 +266,7 @@ RCT_EXPORT_METHOD(stopPlayVoice)
 {
     NSMutableDictionary *dic = [NSMutableDictionary new];
     dic[@"title"] = conversation.conversationTitle;
-    dic[@"type"] = @(conversation.conversationType);
+    dic[@"type"] = [self _convertConversationType: conversation.conversationType];
     dic[@"targetId"] = conversation.targetId;
     dic[@"unreadCount"] = @(conversation.unreadMessageCount);
     dic[@"lastMessage"] = [self _converMessageContent:conversation.lastestMessage];
@@ -284,12 +284,28 @@ RCT_EXPORT_METHOD(stopPlayVoice)
     return dic;
 }
 
++ (NSString *) _convertConversationType: (RCConversationType) type
+{
+    switch(type) {
+        case ConversationType_PRIVATE: return @"private";
+        case ConversationType_DISCUSSION: return @"discussion";
+        case ConversationType_GROUP: return @"group";
+        case ConversationType_CHATROOM: return @"chatroom";
+        case ConversationType_CUSTOMERSERVICE: return @"customerService";
+        case ConversationType_SYSTEM: return @"system";
+        case ConversationType_APPSERVICE: return @"appService";
+        case ConversationType_PUBLICSERVICE: return @"publicService";
+        case ConversationType_PUSHSERVICE: return @"pushService";
+        default: return @"unknown";
+    }
+}
+
 + (NSDictionary *)_convertMessage:(RCMessage *)message
 {
     NSMutableDictionary *dic = [NSMutableDictionary new];
     dic[@"senderId"] = message.senderUserId;
     dic[@"targetId"] = message.targetId;
-    dic[@"conversationType"] = @(message.conversationType);
+    dic[@"conversationType"] = [self _convertConversationType: message.conversationType];;
     dic[@"extra"] = message.extra;
     dic[@"messageId"] = @(message.messageId);
     dic[@"receivedTime"] = @(message.receivedTime);
