@@ -27,5 +27,8 @@
   "peerDependencies": {
     "react-native": ">=0.18.0"
   },
-  "homepage": "https://github.com/reactnativecn/react-native-rong-imlib#readme"
+  "homepage": "https://github.com/reactnativecn/react-native-rong-imlib#readme",
+  "dependencies": {
+    "fbemitter": "^2.0.2"
+  }
 }

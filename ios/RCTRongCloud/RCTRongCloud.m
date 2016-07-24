@@ -279,6 +279,9 @@ RCT_EXPORT_METHOD(stopPlayVoice)
     dic[@"draft"] = conversation.draft;
     dic[@"objectName"] = conversation.objectName;
     dic[@"senderUserId"] = conversation.senderUserId;
+
+    dic[@"conversationTitle"] = conversation.conversationTitle;
+
     dic[@"jsonDict"] = conversation.jsonDict;
     dic[@"lastestMessageId"] = @(conversation.lastestMessageId);
     return dic;
