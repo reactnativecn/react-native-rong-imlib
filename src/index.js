@@ -3,7 +3,7 @@
  */
 
 import {NativeModules, NativeAppEventEmitter} from 'react-native';
-import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
+import {EventEmitter} from 'fbemitter';
 
 const RongIMLib = NativeModules.RongIMLib;
 
@@ -17,9 +17,6 @@ exports.removeAllListeners = eventEmitter.removeAllListeners.bind(eventEmitter);
 exports.removeCurrentListener = eventEmitter.removeCurrentListener.bind(eventEmitter);
 
 NativeAppEventEmitter.addListener('rongIMMsgRecved', msg => {
-  if (__DEV__){
-    console.log(msg);
-  }
   eventEmitter.emit('msgRecved', msg);
 });
 

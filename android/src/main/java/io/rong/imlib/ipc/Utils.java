@@ -114,11 +114,19 @@ public class Utils {
     private static WritableMap convertConversation(Conversation conv) {
         WritableMap ret = Arguments.createMap();
         ret.putString("title", conv.getConversationTitle());
+        ret.putBoolean("isTop", conv.isTop());
         ret.putString("type", conv.getConversationType().getName());
         ret.putString("targetId", conv.getTargetId());
+        ret.putString("senderUserId", conv.getSenderUserId());
         ret.putInt("unreadCount", conv.getUnreadMessageCount());
+        ret.putDouble("sentTime", conv.getSentTime());
+        ret.putDouble("receivedTime", conv.getReceivedTime());
+        ret.putDouble("latestMessageId", conv.getLatestMessageId());
+
+        ret.putString("conversationTitle", conv.getConversationTitle());
         ret.putMap("lastMessage", convertMessageContent(conv.getLatestMessage()));
         return ret;
+
     }
 
     public static MessageContent convertToMessageContent(ReadableMap map) {
