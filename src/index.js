@@ -22,3 +22,7 @@ NativeAppEventEmitter.addListener('rongIMMsgRecved', msg => {
   }
   eventEmitter.emit('msgRecved', msg);
 });
+
+NativeAppEventEmitter.addListener('rongIMConnectionStatus', msg => {
+  eventEmitter.emit('connectionStatus', msg);
+});

@@ -16,7 +16,7 @@
 
 #define OPERATION_FAILED (@"operation returns false.")
 
-@interface RCTRongCloud()<RCIMClientReceiveMessageDelegate>
+@interface RCTRongCloud()<RCIMClientReceiveMessageDelegate, RCConnectionStatusChangeDelegate>
 
 @property (nonatomic, strong) NSMutableDictionary *userInfoDic;
 @property (nonatomic, strong) RCTRongCloudVoiceManager *voiceManager;
@@ -44,6 +44,7 @@ RCT_EXPORT_MODULE(RCTRongIMLib);
     self = [super init];
     if (self) {
         [[RCIMClient sharedRCIMClient] setReceiveMessageDelegate:self object:nil];
+        [[RCIMClient sharedRCIMClient] setRCConnectionStatusChangeDelegate:self];
         _voiceManager = [RCTRongCloudVoiceManager new];
     }
     return self;
@@ -260,6 +261,56 @@ RCT_EXPORT_METHOD(stopPlayVoice)
     [_bridge.eventDispatcher sendAppEventWithName:@"rongIMMsgRecved" body:[self.class _convertMessage:message]];
 }
 
+- (void)onConnectionStatusChanged:(RCConnectionStatus)status
+{
+    NSMutableDictionary* dict = [NSMutableDictionary dictionary];
+    switch (status){
+        case ConnectionStatus_UNKNOWN:
+            [dict setObject:@(-2) forKey:@"code"];
+            [dict setObject:@"Unknown" forKey:@"message"];
+            break;
+        case ConnectionStatus_NETWORK_UNAVAILABLE:
+            [dict setObject:@(-1) forKey:@"code"];
+            [dict setObject:@"Network is unavailable." forKey:@"message"];
+            break;
+        case ConnectionStatus_Connected:
+            [dict setObject:@(0) forKey:@"code"];
+            [dict setObject:@"Connect Success." forKey:@"message"];
+            break;
+        case ConnectionStatus_Connecting:
+            [dict setObject:@(1) forKey:@"code"];
+            [dict setObject:@"Connecting" forKey:@"message"];
+            break;
+        case ConnectionStatus_Unconnected:
+        case ConnectionStatus_SignUp:
+            [dict setObject:@(2) forKey:@"code"];
+            [dict setObject:@"Disconnected" forKey:@"message"];
+            break;
+        case ConnectionStatus_KICKED_OFFLINE_BY_OTHER_CLIENT:
+            [dict setObject:@(3) forKey:@"code"];
+            [dict setObject:@"Login on the other device, and be kicked offline." forKey:@"message"];
+            break;
+        case ConnectionStatus_TOKEN_INCORRECT:
+            [dict setObject:@(4) forKey:@"code"];
+            [dict setObject:@"Token incorrect." forKey:@"message"];
+            break;
+        case ConnectionStatus_SERVER_INVALID:
+            [dict setObject:@(5) forKey:@"code"];
+            [dict setObject:@"Server invalid." forKey:@"message"];
+            break;
+        case ConnectionStatus_Cellular_2G:
+        case ConnectionStatus_Cellular_3G_4G:
+        case ConnectionStatus_WIFI:
+        case ConnectionStatus_LOGIN_ON_WEB:
+        case ConnectionStatus_VALIDATE_INVALID:
+        case ConnectionStatus_DISCONN_EXCEPTION:
+        default:
+            //ignore
+            return;
+    }
+    [_bridge.eventDispatcher sendAppEventWithName:@"rongIMConnectionStatus" body:[dict copy]];
+}
+
 #pragma mark - private
 
 + (NSDictionary *)_convertConversation:(RCConversation *)conversation
@@ -360,5 +411,6 @@ RCT_EXPORT_METHOD(stopPlayVoice)
     }
     return dic;
 }
+
 
 @end

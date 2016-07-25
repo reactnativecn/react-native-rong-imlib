@@ -35,7 +35,7 @@ import io.rong.imlib.model.MessageContent;
 /**
  * Created by tdzl2003 on 3/31/16.
  */
-public class IMLibModule extends ReactContextBaseJavaModule implements RongIMClient.OnReceiveMessageListener {
+public class IMLibModule extends ReactContextBaseJavaModule implements RongIMClient.OnReceiveMessageListener, RongIMClient.ConnectionStatusListener {
 
     static boolean isIMClientInited = false;
 
@@ -56,6 +56,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
     @Override
     public void initialize() {
         RongIMClient.setOnReceiveMessageListener(this);
+        RongIMClient.setConnectionStatusListener(this);
     }
 
     @Override
@@ -265,17 +266,17 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
             return;
         }
         client.insertMessage(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId, senderId, Utils.convertToMessageContent(map),
-            new RongIMClient.ResultCallback<Message>() {
-                @Override
-                public void onError(RongIMClient.ErrorCode errorCode) {
-                    promise.reject("" + errorCode.getValue(), errorCode.getMessage());
-                }
+                new RongIMClient.ResultCallback<Message>() {
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+                        promise.reject("" + errorCode.getValue(), errorCode.getMessage());
+                    }
 
-                @Override
-                public void onSuccess(Message message) {
-                    promise.resolve(Utils.convertMessage(message));
-                }
-            });
+                    @Override
+                    public void onSuccess(Message message) {
+                        promise.resolve(Utils.convertMessage(message));
+                    }
+                });
     }
 
     @ReactMethod
@@ -432,5 +433,13 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
             player.release();
             player = null;
         }
+    }
+
+    @Override
+    public void onChanged(ConnectionStatus connectionStatus) {
+        WritableMap map = Arguments.createMap();
+        map.putInt("code", connectionStatus.getValue());
+        map.putString("message", connectionStatus.getMessage());
+        this.sendDeviceEvent("rongIMConnectionStatus", map);
     }
 }
