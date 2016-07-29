@@ -396,7 +396,7 @@ RCT_EXPORT_METHOD(stopPlayVoice)
         RCImageMessage *message = (RCImageMessage*)messageContent;
         dic[@"type"] = @"image";
         if ([[message.imageUrl substringToIndex:1] isEqualToString:@"/"]) {
-            dic[@"imageUrl"] = [NSString stringWithFormat: @"file://%s", message.imageUrl];
+            dic[@"imageUrl"] = [NSString stringWithFormat: @"file://%@", message.imageUrl];
         } else {
             dic[@"imageUrl"] = message.imageUrl;
         }
