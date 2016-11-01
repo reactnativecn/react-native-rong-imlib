@@ -8,5 +8,7 @@
     <!--原图压缩宽、高-->
     <integer name="rc_image_size">960</integer>
     <!-- 设置发送输入状态 -->
-    <bool name="rc_typing_status">true</bool>
+    <bool name="rc_typing_status">false</bool>
+
+    <string name="rc_media_message_default_save_path">/RongCloud/Media/</string>
 </resources>

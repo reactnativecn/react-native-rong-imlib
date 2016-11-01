@@ -20,57 +20,55 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="20" />
 
     <application
         android:allowBackup="true">
 
         <!-- begin imlib request -->
-
         <service
-            android:name="io.rong.imlib.ipc.RongService"
-            android:process=":ipc" >
-        </service>
-        <service android:name="io.rong.imlib.ReConnectService" />
+                android:name="io.rong.imlib.ipc.RongService"
+                android:exported="true"
+                android:process=":ipc" />
 
-        <receiver android:name="io.rong.imlib.ConnectChangeReceiver" />
-        <receiver android:name="io.rong.imlib.ipc.PushMessageReceiver" >
-            <intent-filter>
-                <action android:name="io.rong.push.message" />
-            </intent-filter>
-        </receiver>
+        <service android:name="io.rong.imlib.ReConnectService"
+                 android:exported="true"/>
+
+        <receiver android:name="io.rong.imlib.ConnectChangeReceiver"
+                  android:exported="true"/>
+
         <receiver
-            android:name="io.rong.imlib.HeartbeatReceiver"
-            android:process=":ipc" />
+                android:name="io.rong.imlib.HeartbeatReceiver"
+                android:process=":ipc" />
 
         <service
-            android:name="io.rong.push.PushService"
-            android:process="io.rong.push" > <!-- Waring: The name of the push process can't be changed!!! -->
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="io.rong.push" />
-            </intent-filter>
+                android:name="io.rong.push.core.PushRegistrationService"
+                android:exported="false">
         </service>
-        <service
-            android:name="io.rong.push.CommandService"
-            android:process="io.rong.push" > <!-- Waring: The name of the push process can't be changed!!! -->
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
 
-                <action android:name="io.rong.command" />
-            </intent-filter>
+        <service
+                android:name="io.rong.push.core.MessageHandleService"
+                android:exported="true">
+        </service>
+
+        <service
+                android:name="io.rong.push.PushService"
+                android:exported="false"
+                android:process="io.rong.push">  <!-- push进程，可以改名 -->
         </service>
 
         <receiver
-            android:name="io.rong.push.PushReceiver"
-            android:process="io.rong.push" > <!-- Waring: The name of the push process can't be changed!!! -->
+                android:name="io.rong.push.PushReceiver"
+                android:process="io.rong.push">   <!-- 此处进程可以改名，名称需要和PushService所在进程统一 -->
+            <!-- 心跳事件 -->
             <intent-filter>
-                <action android:name="io.rong.imlib.action.push.heartbeat" />
+                <action android:name="io.rong.push.intent.action.HEART_BEAT" />
             </intent-filter>
+            <!-- 网络变动事件 -->
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
+            <!-- 部分用户事件 -->
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -78,11 +76,6 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
             </intent-filter>
         </receiver>
 
