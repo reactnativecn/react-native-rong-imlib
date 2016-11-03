@@ -144,7 +144,7 @@ RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) ta
 {
     if ([[json valueForKey:@"type"] isEqualToString:@"image"]) {
         NSString * uri = [RCTConvert NSString:json[@"imageUrl"]];
-        [self.bridge.imageLoader loadImageWithTag:uri callback:^(NSError *error, UIImage *image) {
+        [self.bridge.imageLoader loadImageWithURLRequest:uri callback:^(NSError *error, UIImage *image) {
             dispatch_async([self methodQueue], ^(void) {
                 if (error) {
                     reject([NSString stringWithFormat: @"%lu", (long)error.code], error.localizedDescription, error);
