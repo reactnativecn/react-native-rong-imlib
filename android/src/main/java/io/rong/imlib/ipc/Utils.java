@@ -158,6 +158,23 @@ public class Utils {
         return TextMessage.obtain("[未知消息]");
     }
 
+    public static String convertMessageContentToString(MessageContent content) {
+        if (content instanceof TextMessage) {
+            TextMessage textContent = (TextMessage)content;
+            return textContent.getContent();
+        } else if (content instanceof VoiceMessage) {
+            VoiceMessage voiceContent = (VoiceMessage)content;
+            return "[语音消息]";
+        } else if (content instanceof ImageMessage){
+            ImageMessage imageContent = (ImageMessage)content;
+            return "[图片]";
+        } else if (content instanceof CommandNotificationMessage) {
+            return "[通知]";
+        } else {
+            return "[新消息]";
+        }
+    }
+
     public interface ImageCallback {
         void invoke(@Nullable Bitmap bitmap);
     }
