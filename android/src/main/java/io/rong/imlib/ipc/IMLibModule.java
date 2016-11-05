@@ -2,7 +2,9 @@ package io.rong.imlib.ipc;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
@@ -100,6 +102,17 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
                     .setTicker(contentString)
                     .setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_ALL);
+
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Uri.Builder builder = Uri.parse("rong://" + context.getPackageName()).buildUpon();
+
+            builder.appendPath("conversation").appendPath(message.getConversationType().getName())
+                    .appendQueryParameter("targetId", message.getTargetId())
+                    .appendQueryParameter("title", message.getTargetId());
+            intent.setData(builder.build());
+            mBuilder.setContentIntent(PendingIntent.getActivity(context, 0, intent, 0));
+
             Notification notification = mBuilder.build();
             mNotificationManager.notify(1000, notification);
         }
