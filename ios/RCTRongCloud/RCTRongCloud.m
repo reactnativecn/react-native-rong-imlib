@@ -236,7 +236,7 @@ RCT_EXPORT_METHOD(finishRecordVoice)
     [_voiceManager finishRecord];
 }
 
-RCT_EXPORT_METHOD(startPlayVoice:(RCMessageContent *)voice rosolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(startPlayVoice:(RCMessageContent *)voice resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 {
     [_voiceManager startPlayVoice:(RCVoiceMessage *)voice result:^(NSError *error, NSDictionary *result) {
         if (error) {
@@ -251,6 +251,38 @@ RCT_EXPORT_METHOD(startPlayVoice:(RCMessageContent *)voice rosolve:(RCTPromiseRe
 RCT_EXPORT_METHOD(stopPlayVoice)
 {
     [_voiceManager stopPlayVoice];
+}
+
+RCT_EXPORT_METHOD(getConversationNotificationStatus:(RCConversationType) type targetId:(NSString*) targetId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    RCIMClient* client = [RCIMClient sharedRCIMClient];
+    [client getConversationNotificationStatus:type targetId:targetId success:^(RCConversationNotificationStatus nStatus) {
+        switch (nStatus) {
+            case DO_NOT_DISTURB:
+                resolve(@(YES));
+            default:
+                resolve(@(NO));
+        }
+    } error:^(RCErrorCode status) {
+        reject([NSString stringWithFormat:@"%ld", status], @"Failed", nil);
+    }];
+}
+
+RCT_EXPORT_METHOD(setConversationNotificationStatus:(RCConversationType) type targetId:(NSString*) targetId isBlocked:(BOOL)isBlocked resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    RCIMClient* client = [RCIMClient sharedRCIMClient];
+    [client setConversationNotificationStatus:type targetId:targetId isBlocked:isBlocked success:^(RCConversationNotificationStatus nStatus) {
+        resolve(nil);
+    } error:^(RCErrorCode status) {
+        reject([NSString stringWithFormat:@"%ld", status], @"Failed", nil);
+    }];
+}
+
+RCT_EXPORT_METHOD(clearMessages:(RCConversationType) type targetId:(NSString*) targetId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    RCIMClient* client = [RCIMClient sharedRCIMClient];
+    [client clearMessages:type targetId:targetId];
+    resolve(nil);
 }
 
 #pragma mark - delegate

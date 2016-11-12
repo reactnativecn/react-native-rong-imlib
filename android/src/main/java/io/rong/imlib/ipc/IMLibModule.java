@@ -475,6 +475,67 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
         }
     }
 
+    @ReactMethod
+    public void getConversationNotificationStatus(String type, String targetId, final Promise promise){
+        if (client == null){
+            promise.reject("NotLogined", "Must call connect first.");
+            return;
+        }
+        client.getConversationNotificationStatus(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId,
+                new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>(){
+
+                    @Override
+                    public void onSuccess(Conversation.ConversationNotificationStatus conversationNotificationStatus) {
+                        switch (conversationNotificationStatus) {
+                            case DO_NOT_DISTURB:
+                                promise.resolve(true);
+                                break;
+                            default:
+                                promise.resolve(false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+                        promise.reject("" + errorCode.getValue(), errorCode.getMessage());
+                    }
+                });
+    }
+
+    @ReactMethod
+    public void setConversationNotificationStatus(String type, String targetId, boolean isBlock, final Promise promise) {
+        client.setConversationNotificationStatus(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId,
+                isBlock ? Conversation.ConversationNotificationStatus.DO_NOT_DISTURB : Conversation.ConversationNotificationStatus.NOTIFY,
+                new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>() {
+
+                    @Override
+                    public void onSuccess(Conversation.ConversationNotificationStatus conversationNotificationStatus) {
+                        promise.resolve(null);
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+                        promise.reject("" + errorCode.getValue(), errorCode.getMessage());
+                    }
+                });
+    }
+
+    @ReactMethod
+    public void clearMessages(String type, String targetId, final Promise promise) {
+        client.clearMessages(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId,
+                new  RongIMClient.ResultCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        promise.resolve(null);
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+                        promise.reject("" + errorCode.getValue(), errorCode.getMessage());
+                    }
+                });
+    }
+
     @Override
     public void onChanged(ConnectionStatus connectionStatus) {
         WritableMap map = Arguments.createMap();
