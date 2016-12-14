@@ -138,13 +138,19 @@ RCT_EXPORT_METHOD(getLatestMessages: (RCConversationType) type targetId:(NSStrin
     resolve(newArray);
 }
 
+RCT_EXPORT_METHOD(removeConversation: (RCConversationType) type targetId:(NSString*) targetId)
+{
+  RCIMClient* client = [RCIMClient sharedRCIMClient];
+  [client removeConversation: type targetId: targetId];
+}
+
 RCT_EXPORT_METHOD(sendMessage: (RCConversationType) type targetId:(NSString*) targetId content:(NSDictionary*) json
                   pushContent: (NSString*) pushContent pushData:(NSString*) pushData
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 {
     if ([[json valueForKey:@"type"] isEqualToString:@"image"]) {
         NSString * uri = [RCTConvert NSString:json[@"imageUrl"]];
-        [self.bridge.imageLoader loadImageWithURLRequest:uri callback:^(NSError *error, UIImage *image) {
+        [self.bridge.imageLoader loadImageWithURLRequest:[RCTConvert NSURLRequest: uri] callback:^(NSError *error, UIImage *image) {
             dispatch_async([self methodQueue], ^(void) {
                 if (error) {
                     reject([NSString stringWithFormat: @"%lu", (long)error.code], error.localizedDescription, error);
