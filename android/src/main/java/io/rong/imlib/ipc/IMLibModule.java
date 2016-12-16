@@ -223,7 +223,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
             promise.reject("NotLogined", "Must call connect first.");
             return;
         }
-        client.removeConversation(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId, new ResultCallback<Boolean>(){
+        client.removeConversation(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId, new RongIMClient.ResultCallback<Boolean>(){
             @Override
             public void onError(RongIMClient.ErrorCode errorCode) {
               promise.reject("" + errorCode.getValue(), errorCode.getMessage());
@@ -231,7 +231,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
 
             @Override
             public void onSuccess(Boolean message) {
-              Promise.resolve(message);
+              promise.resolve(message);
             }
         });
     }
