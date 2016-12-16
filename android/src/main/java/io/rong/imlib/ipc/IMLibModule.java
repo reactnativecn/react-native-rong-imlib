@@ -218,7 +218,7 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
     }
 
     @ReactMethod
-    public void removeConversation(final String type, final String targetId) {
+    public void removeConversation(final String type, final String targetId, Promise promise) {
         if (client == null) {
             promise.reject("NotLogined", "Must call connect first.");
             return;
@@ -226,10 +226,12 @@ public class IMLibModule extends ReactContextBaseJavaModule implements RongIMCli
         client.removeConversation(Conversation.ConversationType.valueOf(type.toUpperCase()), targetId, new ResultCallback<Boolean>(){
             @Override
             public void onError(RongIMClient.ErrorCode errorCode) {
+              promise.reject("" + errorCode.getValue(), errorCode.getMessage());
             }
 
             @Override
             public void onSuccess(Boolean message) {
+              Promise.resolve(message);
             }
         });
     }
